@@ -177,7 +177,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/01/11/%E6%B5%8B%E8%AF%95/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/01/25/jitpack-md/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -191,7 +191,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/01/11/%E6%B5%8B%E8%AF%95/" class="post-title-link" itemprop="url">测试</a>
+            <a href="/2021/01/25/jitpack-md/" class="post-title-link" itemprop="url">Android library 托管到 JitPack</a>
         </h2>
 
         <div class="post-meta">
@@ -200,8 +200,9 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
+              
 
-              <time title="创建时间：2021-01-11 15:03:17" itemprop="dateCreated datePublished" datetime="2021-01-11T15:03:17+08:00">2021-01-11</time>
+              <time title="创建时间：2021-01-25 14:52:42 / 修改时间：15:42:14" itemprop="dateCreated datePublished" datetime="2021-01-25T14:52:42+08:00">2021-01-25</time>
             </span>
 
           
@@ -215,7 +216,92 @@
     <div class="post-body" itemprop="articleBody">
 
       
+          <h3 id="Android-library-上传到-jitpack"><a href="#Android-library-上传到-jitpack" class="headerlink" title="Android library 上传到 jitpack"></a>Android library 上传到 jitpack</h3><hr/>
+
+<blockquote>
+<p>最近公司有个项目编译时间太长，将其中的一部分library做成依赖库上传到jitpack,加快一下项目的编译速度。</p>
+</blockquote>
+<p>在线依赖的一些好处：</p>
+<ul>
+<li> 方便项目使用 </li>
+<li> 减少编译时间</li>
+<li> 多成员可以快速使用，不用复制来复制云</li>
+<li> 方便更新</li>
+</ul>
+<h3 id="使用方式"><a href="#使用方式" class="headerlink" title="使用方式"></a>使用方式</h3><ol>
+<li>选择代码存放仓库，Github或Gitee,创建公开的Git项目；</li>
+<li>本地创建项目及Library,并关联到远程仓库；</li>
+<li>rootProject下面的build.gradle配置如下：<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">  buildscript &#123;</span><br><span class="line"></span><br><span class="line">    repositories &#123;</span><br><span class="line">        google()</span><br><span class="line">        jcenter()</span><br><span class="line">        mavenCentral()</span><br><span class="line">    &#125;</span><br><span class="line">    dependencies &#123;</span><br><span class="line">        classpath <span class="string">&#x27;com.android.tools.build:gradle:4.1.1&#x27;</span></span><br><span class="line">        <span class="comment">// Add this line below</span></span><br><span class="line">        classpath <span class="string">&#x27;com.github.dcendents:android-maven-gradle-plugin:2.1&#x27;</span> </span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li>library下面的build.gradle进行配置：<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">apply <span class="attr">plugin:</span> <span class="string">&#x27;com.android.library&#x27;</span></span><br><span class="line">apply <span class="attr">plugin:</span> <span class="string">&#x27;com.github.dcendents.android-maven&#x27;</span></span><br><span class="line">group=<span class="string">&#x27;com.gitee.orguser&#x27;</span> <span class="comment">// 如：group= &#x27;com.gitee.zftlive&#x27; </span></span><br></pre></td></tr></table></figure></li>
+<li>将代码上传到Gitee或Github，Gitee创建发行版，Github创建Release版本</li>
+<li>复制仓库地址，打开<a target="_blank" rel="noopener" href="https://jitpack.io/">jitpack.io</a>，查看build状态</li>
+<li>编辑成功后使用，在jitpack.io上面有<code>get it</code> 文字按钮，点击可查看如何使用。</li>
+</ol>
+<ul>
+<li>rootProject下面的build.gradle配置<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">allprojects &#123;</span><br><span class="line">		repositories &#123;</span><br><span class="line">			...</span><br><span class="line">			maven &#123; url <span class="string">&#x27;https://jitpack.io&#x27;</span> &#125;</span><br><span class="line">		&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li>module模块下面的build.gradle配置<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">dependencies &#123;</span><br><span class="line">	implementation <span class="string">&#x27;com.github.User:Repo:Tag&#x27;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.css">
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/01/12/SQLite/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="zhaoSunny">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zhaoSunny's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
           
+            <a href="/2021/01/12/SQLite/" class="post-title-link" itemprop="url">SQLite</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-01-12 17:34:49 / 修改时间：18:12:11" itemprop="dateCreated datePublished" datetime="2021-01-12T17:34:49+08:00">2021-01-12</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id=""><a href="#" class="headerlink" title=""></a></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE PROVINCE(</span><br><span class="line">    id INTEGER PRIMARY KEY AUTOINCREMENT,</span><br><span class="line">    id TEXT,</span><br><span class="line">    name</span><br><span class="line">) </span><br></pre></td></tr></table></figure>
+<h3 id="Experiment-Data-Sources"><a href="#Experiment-Data-Sources" class="headerlink" title="Experiment Data Sources"></a>Experiment Data Sources</h3><p><a target="_blank" rel="noopener" href="https://github.com/wecatch/china_regions">China cities json</a></p>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.css">
       
     </div>
 
@@ -362,9 +448,13 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">2</span>
+          <span class="site-state-item-count">3</span>
           <span class="site-state-item-name">日志</span>
         </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">标签</span>
       </div>
   </nav>
 </div>
