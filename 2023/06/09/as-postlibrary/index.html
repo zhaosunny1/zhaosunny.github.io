@@ -20,24 +20,32 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"zhaosunny1.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.17.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
 
-    <meta property="og:type" content="website">
-<meta property="og:title" content="Sunny Zhao&#39;s Blog">
-<meta property="og:url" content="https://zhaosunny1.github.io/index.html">
+    <meta name="description" content="以前是将aar包托管到jcenter、jitpack.io等网站。使用不方便。现在Android Studio本身插件已支持。如果公司中已经部署Nexus私服，则使用此操作，将aar包发布公司私服，使用方便。 快速开始1.library中的build.gradle配置打开项目的库模块中的build.gradle,填写以下配置。配置Nexus Maven仓库中的地址以及登录账号密码，设置相应的lib">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android Studio 制作aar包发布到私服">
+<meta property="og:url" content="https://zhaosunny1.github.io/2023/06/09/as-postlibrary/index.html">
 <meta property="og:site_name" content="Sunny Zhao&#39;s Blog">
+<meta property="og:description" content="以前是将aar包托管到jcenter、jitpack.io等网站。使用不方便。现在Android Studio本身插件已支持。如果公司中已经部署Nexus私服，则使用此操作，将aar包发布公司私服，使用方便。 快速开始1.library中的build.gradle配置打开项目的库模块中的build.gradle,填写以下配置。配置Nexus Maven仓库中的地址以及登录账号密码，设置相应的lib">
 <meta property="og:locale">
+<meta property="article:published_time" content="2023-06-09T02:15:36.379Z">
+<meta property="article:modified_time" content="2023-06-09T06:29:16.513Z">
 <meta property="article:author" content="Sunny Zhao">
-<meta property="article:tag" content="Life,IT Tech, 日语">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="aar包">
+<meta property="article:tag" content="publish">
+<meta property="article:tag" content="maven私服">
+<meta property="article:tag" content="制作aar包">
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="https://zhaosunny1.github.io/">
+<link rel="canonical" href="https://zhaosunny1.github.io/2023/06/09/as-postlibrary/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":true,"isPost":false,"lang":"zh-Hans","comments":"","permalink":"","path":"index.html","title":""}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-Hans","comments":true,"permalink":"https://zhaosunny1.github.io/2023/06/09/as-postlibrary/","path":"2023/06/09/as-postlibrary/","title":"Android Studio 制作aar包发布到私服"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>Sunny Zhao's Blog</title>
+<title>Android Studio 制作aar包发布到私服 | Sunny Zhao's Blog</title>
   
 
   <script src="/js/third-party/analytics/baidu-analytics.js"></script>
@@ -72,7 +80,7 @@
 
     <a href="/" class="brand" rel="start">
       <i class="logo-line"></i>
-      <h1 class="site-title">Sunny Zhao's Blog</h1>
+      <p class="site-title">Sunny Zhao's Blog</p>
       <i class="logo-line"></i>
     </a>
   </div>
@@ -98,7 +106,7 @@
   
   <aside class="sidebar">
 
-    <div class="sidebar-inner sidebar-overview-active">
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
       <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
           Table of Contents
@@ -111,6 +119,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BF%AB%E9%80%9F%E5%BC%80%E5%A7%8B"><span class="nav-number">1.</span> <span class="nav-text">快速开始</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-library%E4%B8%AD%E7%9A%84build-gradle%E9%85%8D%E7%BD%AE"><span class="nav-number">1.1.</span> <span class="nav-text">1.library中的build.gradle配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E6%89%93%E5%8C%85aar%E4%B8%8A%E4%BC%A0%E5%88%B0Nexus%E7%A7%81%E6%9C%8D"><span class="nav-number">1.2.</span> <span class="nav-text">2.打包aar上传到Nexus私服</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%9C%A8%E9%A1%B9%E7%9B%AE%E4%B8%AD%E4%BD%BF%E7%94%A8%E5%BC%95%E7%94%A8"><span class="nav-number">1.3.</span> <span class="nav-text">3.在项目中使用引用</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -153,16 +162,17 @@
 
     </div>
 
-    <div class="main-inner index posts-expand">
+    <div class="main-inner post posts-expand">
 
-    
+
+  
 
 
 <div class="post-block">
   
   
 
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-Hans">
     <link itemprop="mainEntityOfPage" href="https://zhaosunny1.github.io/2023/06/09/as-postlibrary/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -176,13 +186,13 @@
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Sunny Zhao's Blog">
+      <meta itemprop="name" content="Android Studio 制作aar包发布到私服 | Sunny Zhao's Blog">
       <meta itemprop="description" content="">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2023/06/09/as-postlibrary/" class="post-title-link" itemprop="url">Android Studio 制作aar包发布到私服</a>
-        </h2>
+        <h1 class="post-title" itemprop="name headline">
+          Android Studio 制作aar包发布到私服
+        </h1>
 
         <div class="post-meta-container">
           <div class="post-meta">
@@ -214,8 +224,7 @@
     
     
     
-    <div class="post-body" itemprop="articleBody">
-          <p>以前是将aar包托管到jcenter、jitpack.io等网站。使用不方便。现在Android Studio本身插件已支持。如果公司中已经部署Nexus私服，则使用此操作，将aar包发布公司私服，使用方便。</p>
+    <div class="post-body" itemprop="articleBody"><p>以前是将aar包托管到jcenter、jitpack.io等网站。使用不方便。现在Android Studio本身插件已支持。如果公司中已经部署Nexus私服，则使用此操作，将aar包发布公司私服，使用方便。</p>
 <h2 id="快速开始"><a href="#快速开始" class="headerlink" title="快速开始"></a>快速开始</h2><h3 id="1-library中的build-gradle配置"><a href="#1-library中的build-gradle配置" class="headerlink" title="1.library中的build.gradle配置"></a>1.library中的build.gradle配置</h3><p>打开项目的库模块中的build.gradle,填写以下配置。配置Nexus Maven仓库中的地址以及登录账号密码，设置相应的library的组id和产品id和填写版本号。</p>
 <figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">plugins &#123;</span><br><span class="line">    id <span class="string">&#x27;com.android.library&#x27;</span></span><br><span class="line">    id <span class="string">&#x27;kotlin-android&#x27;</span></span><br><span class="line">    id <span class="string">&#x27;kotlin-kapt&#x27;</span></span><br><span class="line">    id <span class="string">&#x27;maven-publish&#x27;</span></span><br><span class="line">&#125;</span><br><span class="line">afterEvaluate &#123;</span><br><span class="line">    publishing &#123;</span><br><span class="line">        publications &#123;</span><br><span class="line">            release(MavenPublication) &#123;</span><br><span class="line">                groupId = <span class="string">&#x27;GROUP ID&#x27;</span> <span class="comment">//publish</span></span><br><span class="line">                artifactId = <span class="string">&#x27;产口ID&#x27;</span></span><br><span class="line">                version = <span class="string">&#x27;1.0.3&#x27;</span></span><br><span class="line">                from components.release</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        repositories &#123;</span><br><span class="line">            maven &#123;</span><br><span class="line">                url = <span class="string">&quot;MAVEN 仓库地址&quot;</span></span><br><span class="line">                allowInsecureProtocol(<span class="literal">true</span>)</span><br><span class="line">                credentials &#123;</span><br><span class="line">                    username = <span class="string">&#x27;账号名&#x27;</span></span><br><span class="line">                    password = <span class="string">&#x27;密码&#x27;</span></span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
@@ -230,7 +239,6 @@
 <figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">api <span class="string">&quot;androidx.core:core-ktx:1.6.0&quot;</span>  </span><br><span class="line">api <span class="string">&quot;GroupdId: 产品ID：版本号&quot;</span>  <span class="comment">//可以nexus私服查到对应的aar包所在文件夹，找到groovy的引用地址</span></span><br></pre></td></tr></table></figure>
 <p>点击gradle sync、运行项目即可使用。</p>
 
-      
     </div>
 
     
@@ -238,93 +246,29 @@
     
 
     <footer class="post-footer">
-        <div class="post-eof"></div>
-      
+          <div class="post-tags">
+              <a href="/tags/Android/" rel="tag"># Android</a>
+              <a href="/tags/aar%E5%8C%85/" rel="tag"># aar包</a>
+              <a href="/tags/publish/" rel="tag"># publish</a>
+              <a href="/tags/maven%E7%A7%81%E6%9C%8D/" rel="tag"># maven私服</a>
+              <a href="/tags/%E5%88%B6%E4%BD%9Caar%E5%8C%85/" rel="tag"># 制作aar包</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/06/08/hello-world/" rel="prev" title="Hello World">
+                  <i class="fa fa-chevron-left"></i> Hello World
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
     </footer>
   </article>
 </div>
 
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://zhaosunny1.github.io/2023/06/08/hello-world/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Sunny Zhao">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Sunny Zhao's Blog">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Sunny Zhao's Blog">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2023/06/08/hello-world/" class="post-title-link" itemprop="url">Hello World</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-      
-
-      <time title="Created: 2023-06-08 17:17:47 / Modified: 17:15:27" itemprop="dateCreated datePublished" datetime="2023-06-08T17:17:47+08:00">2023-06-08</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
 
 
 
