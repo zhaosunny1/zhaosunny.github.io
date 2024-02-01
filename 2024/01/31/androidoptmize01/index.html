@@ -20,24 +20,30 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"zhaosunny1.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.17.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
 
-    <meta property="og:type" content="website">
-<meta property="og:title" content="Sunny Zhao&#39;s Blog">
-<meta property="og:url" content="https://zhaosunny1.github.io/index.html">
+    <meta name="description" content="Android编译APK时要启用代码混淆和资源优化，以防止反编译和减少应用大小。有以下优点和缺点： 优点：  代码缩减（即摇树优化）: 移除不使用的类、字段、方法和属性,规避64K引用； 资源缩减：从封装应用中移除不使用的资源，减少应用大小； 混淆：缩短类和成员的名称，从而减小 DEX 文件的大小;  优化：检查并重写代码，以进一步减小应用的 DEX 文件的大小; 增加反编译难度: 无意义的类名、">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android混淆之代码缩减和资源优化">
+<meta property="og:url" content="https://zhaosunny1.github.io/2024/01/31/androidoptmize01/index.html">
 <meta property="og:site_name" content="Sunny Zhao&#39;s Blog">
+<meta property="og:description" content="Android编译APK时要启用代码混淆和资源优化，以防止反编译和减少应用大小。有以下优点和缺点： 优点：  代码缩减（即摇树优化）: 移除不使用的类、字段、方法和属性,规避64K引用； 资源缩减：从封装应用中移除不使用的资源，减少应用大小； 混淆：缩短类和成员的名称，从而减小 DEX 文件的大小;  优化：检查并重写代码，以进一步减小应用的 DEX 文件的大小; 增加反编译难度: 无意义的类名、">
 <meta property="og:locale">
+<meta property="og:image" content="https://zhaosunny1.github.io/assets/images/proguard_process.png">
+<meta property="article:published_time" content="2024-01-31T03:20:26.000Z">
+<meta property="article:modified_time" content="2024-02-01T07:26:26.569Z">
 <meta property="article:author" content="Sunny Zhao">
-<meta property="article:tag" content="Life,IT Tech, 日语">
+<meta property="article:tag" content="Android，混淆，代码缩减，资源优化，">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zhaosunny1.github.io/assets/images/proguard_process.png">
 
 
-<link rel="canonical" href="https://zhaosunny1.github.io/">
+<link rel="canonical" href="https://zhaosunny1.github.io/2024/01/31/androidoptmize01/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":true,"isPost":false,"lang":"zh-Hans","comments":"","permalink":"","path":"index.html","title":""}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-Hans","comments":true,"permalink":"https://zhaosunny1.github.io/2024/01/31/androidoptmize01/","path":"2024/01/31/androidoptmize01/","title":"Android混淆之代码缩减和资源优化"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>Sunny Zhao's Blog</title>
+<title>Android混淆之代码缩减和资源优化 | Sunny Zhao's Blog</title>
   
 
   <script src="/js/third-party/analytics/baidu-analytics.js"></script>
@@ -72,7 +78,7 @@
 
     <a href="/" class="brand" rel="start">
       <i class="logo-line"></i>
-      <h1 class="site-title">Sunny Zhao's Blog</h1>
+      <p class="site-title">Sunny Zhao's Blog</p>
       <i class="logo-line"></i>
     </a>
   </div>
@@ -98,7 +104,7 @@
   
   <aside class="sidebar">
 
-    <div class="sidebar-inner sidebar-overview-active">
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
       <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
           Table of Contents
@@ -111,6 +117,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E6%B7%B7%E6%B7%86%E8%BF%87%E7%A8%8B"><span class="nav-number">1.</span> <span class="nav-text">代码混淆过程</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%87%86%E5%A4%87%E5%B7%A5%E5%85%B7"><span class="nav-number"></span> <span class="nav-text">一、准备工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E9%A1%B9%E7%9B%AE%E9%85%8D%E7%BD%AE"><span class="nav-number"></span> <span class="nav-text">二、项目配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E4%BB%A3%E7%A0%81%E9%85%8D%E7%BD%AE"><span class="nav-number">1.</span> <span class="nav-text">2.1 代码配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E9%85%8D%E7%BD%AEFlavour%E4%B8%93%E7%94%A8%E7%9A%84proguard"><span class="nav-number">2.</span> <span class="nav-text">2.2 配置Flavour专用的proguard</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-%E6%B7%B7%E6%B7%86%E6%96%87%E4%BB%B6"><span class="nav-number">3.</span> <span class="nav-text">2.3 混淆文件</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B7%B7%E6%B7%86%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E6%9C%89%E4%BB%A5%E4%B8%8B%E5%87%A0%E7%A7%8D"><span class="nav-number">3.1.</span> <span class="nav-text">混淆配置文件有以下几种</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4-%E7%94%A8%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93%E7%9A%84%E6%B7%B7%E6%B7%86%E6%96%87%E4%BB%B6%E9%85%8D%E7%BD%AE"><span class="nav-number">4.</span> <span class="nav-text">2.4 用第三方库的混淆文件配置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E4%BB%A3%E7%A0%81%E7%BC%A9%E5%87%8F%E5%8F%8A%E8%B5%84%E6%BA%90%E4%BC%98%E5%8C%96%E6%B7%B7%E6%B7%86%E6%8C%87%E4%BB%A4%E7%AD%89"><span class="nav-number"></span> <span class="nav-text">三、代码缩减及资源优化混淆指令等</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-R8%E4%BB%A3%E7%A0%81%E7%BC%A9%E5%87%8F%E8%BF%87%E7%A8%8B"><span class="nav-number">1.</span> <span class="nav-text">1.R8代码缩减过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E4%BB%A3%E7%A0%81%E6%B7%B7%E6%B7%86%E6%8C%87%E4%BB%A4"><span class="nav-number">2.</span> <span class="nav-text">2.代码混淆指令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E8%B5%84%E6%BA%90%E7%BC%A9%E5%87%8F"><span class="nav-number">3.</span> <span class="nav-text">3. 资源缩减</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E4%BB%A3%E7%A0%81%E6%B7%B7%E6%B7%86"><span class="nav-number">4.</span> <span class="nav-text">4.代码混淆</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E8%BF%9B%E4%B8%80%E6%AD%A5%E4%BC%98%E5%8C%96"><span class="nav-number">5.</span> <span class="nav-text">5.进一步优化</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E6%89%93%E5%8C%85%E6%B7%B7%E6%B7%86%E4%BF%A1%E6%81%AF%E6%96%87%E4%BB%B6"><span class="nav-number"></span> <span class="nav-text">四、打包混淆信息文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81Android%E8%87%AA%E5%B8%A6%E6%B7%B7%E6%B7%86%E6%96%87%E4%BB%B6"><span class="nav-number"></span> <span class="nav-text">五、Android自带混淆文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%AB%A0"><span class="nav-number"></span> <span class="nav-text">参考文章</span></a></div>
         </div>
         <!--/noindex-->
 
@@ -153,16 +160,17 @@
 
     </div>
 
-    <div class="main-inner index posts-expand">
+    <div class="main-inner post posts-expand">
 
-    
+
+  
 
 
 <div class="post-block">
   
   
 
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-Hans">
     <link itemprop="mainEntityOfPage" href="https://zhaosunny1.github.io/2024/01/31/androidoptmize01/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -176,13 +184,13 @@
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Sunny Zhao's Blog">
+      <meta itemprop="name" content="Android混淆之代码缩减和资源优化 | Sunny Zhao's Blog">
       <meta itemprop="description" content="">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/01/31/androidoptmize01/" class="post-title-link" itemprop="url">Android混淆之代码缩减和资源优化</a>
-        </h2>
+        <h1 class="post-title" itemprop="name headline">
+          Android混淆之代码缩减和资源优化
+        </h1>
 
         <div class="post-meta-container">
           <div class="post-meta">
@@ -220,8 +228,7 @@
     
     
     
-    <div class="post-body" itemprop="articleBody">
-          <p>Android编译APK时要启用代码混淆和资源优化，以防止反编译和减少应用大小。有以下优点和缺点：</p>
+    <div class="post-body" itemprop="articleBody"><p>Android编译APK时要启用代码混淆和资源优化，以防止反编译和减少应用大小。有以下优点和缺点：</p>
 <p>优点：</p>
 <ul>
 <li><code>代码缩减（即摇树优化）</code>: 移除不使用的类、字段、方法和属性,规避64K引用；</li>
@@ -318,7 +325,6 @@
 <li><a target="_blank" rel="noopener" href="https://juejin.cn/post/7104539442739838983">由浅入深 Android 混淆实战</a></li>
 </ul>
 
-      
     </div>
 
     
@@ -326,511 +332,25 @@
     
 
     <footer class="post-footer">
-        <div class="post-eof"></div>
-      
+          <div class="post-tags">
+              <a href="/tags/Android%EF%BC%8C%E6%B7%B7%E6%B7%86%EF%BC%8C%E4%BB%A3%E7%A0%81%E7%BC%A9%E5%87%8F%EF%BC%8C%E8%B5%84%E6%BA%90%E4%BC%98%E5%8C%96%EF%BC%8C/" rel="tag"># Android，混淆，代码缩减，资源优化，</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/01/29/Android-36XX%E5%8A%A0%E5%9B%BA%E8%84%B1%E5%A3%B3/" rel="prev" title="Android 加固脱壳实战">
+                  <i class="fa fa-chevron-left"></i> Android 加固脱壳实战
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
     </footer>
   </article>
 </div>
 
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://zhaosunny1.github.io/2024/01/29/Android-36XX%E5%8A%A0%E5%9B%BA%E8%84%B1%E5%A3%B3/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Sunny Zhao">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Sunny Zhao's Blog">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Sunny Zhao's Blog">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/01/29/Android-36XX%E5%8A%A0%E5%9B%BA%E8%84%B1%E5%A3%B3/" class="post-title-link" itemprop="url">Android 加固脱壳实战</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2024-01-29 15:26:59" itemprop="dateCreated datePublished" datetime="2024-01-29T15:26:59+08:00">2024-01-29</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2024-01-31 10:33:32" itemprop="dateModified" datetime="2024-01-31T10:33:32+08:00">2024-01-31</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>本文主要介绍尝试以下几种方案进行 某加固APP进行脱壳。本文为实战操作。</p>
-<ul>
-<li>第一种方案： Xposed + Fdex2 + 夜神模拟器；（推荐）</li>
-<li>第二种方案： Python + pip3 + Frida + FridaDump；</li>
-<li>第三种方案： BlackDex(2022版本，作者未更新)</li>
-<li>Dex合并</li>
-</ul>
-<h2 id="第一种方案（Xposed-Fdex2）"><a href="#第一种方案（Xposed-Fdex2）" class="headerlink" title="第一种方案（Xposed + Fdex2）"></a>第一种方案（Xposed + Fdex2）</h2><h3 id="Xposed-准备工具"><a href="#Xposed-准备工具" class="headerlink" title="Xposed 准备工具"></a>Xposed 准备工具</h3><ol>
-<li><code>VirtualXposed</code> <a target="_blank" rel="noopener" href="https://vxposed.com/">下载地址</a>   </li>
-<li><code>VirtualXposed&#39;s Github</code> <a target="_blank" rel="noopener" href="https://github.com/android-hacker/VirtualXposed">Github地址</a></li>
-<li><code>VirtualXposed&#39;s 多开鸭版本</code> <a href="www.duokaiya.com">官网</a></li>
-<li><code>FDex2</code> <a target="_blank" rel="noopener" href="https://github.com/HangZhouCat/ReaverAPKTools/blob/master/FDex2.apk">下载地址</a></li>
-</ol>
-<h3 id="Xposed-操作步骤"><a href="#Xposed-操作步骤" class="headerlink" title="Xposed 操作步骤"></a>Xposed 操作步骤</h3><ol>
-<li>先安装Xposed;</li>
-<li>再安装Fdex2,</li>
-<li>在Xposed的Module模块中启用Fdex2. 然后安装目标Apk；</li>
-<li>打开Fdex2，选中目标应用，再打开目标应用；</li>
-<li>记住4步骤中Fdex2中提示的路径，用于导出dex文件；</li>
-<li>打开文件管理器，进入提示路径，选中dex 导出到Download文件夹下面；</li>
-<li>打开夜神模拟器（Android 7系统）的文件助手，打开电脑文件夹，找到Download可以看到dex文件；</li>
-<li>使用其他工具反编译Dex文件。</li>
-</ol>
-<h2 id="第二种方案-Frida"><a href="#第二种方案-Frida" class="headerlink" title="第二种方案 (Frida)"></a>第二种方案 (Frida)</h2><h3 id="Frida-准备工具"><a href="#Frida-准备工具" class="headerlink" title="Frida 准备工具"></a>Frida 准备工具</h3><ol>
-<li>Frida-server<a target="_blank" rel="noopener" href="https://github.com/frida/frida/releases">下载地址</a></li>
-<li>Frida-dump&#x2F; Frida-Tools</li>
-<li>Python环境</li>
-</ol>
-<h3 id="Frida-操作步骤"><a href="#Frida-操作步骤" class="headerlink" title="Frida 操作步骤"></a>Frida 操作步骤</h3><ol>
-<li>查看CPU支持版本，用于选择Frida-server(x86 arm arm64);  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">adb shell getprop ro.product.cpu.abi</span><br></pre></td></tr></table></figure></li>
-<li>下载Frida-server,解压至frida-server，然后配置操作（注意，是整一个文件，不是文件夹，请查看注意事项6）;<br>我这里下载的安装包是：frida-server-16.1.11-android-x86.xz，解压可以获取无后缀名的二进制文件。不要下载错了。  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">adb connect 127.0.0.1:62001 #连接模拟器</span><br><span class="line">adb root # might be required</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="comment"># adb push frida-server /data/local/tmp/ （官方命令，实际执行按下面这个）</span></span></span><br><span class="line">adb push frida-server-16.1.11-android-x86 /data/local/tmp/frida-server</span><br><span class="line">adb shell &quot;chmod 755 /data/local/tmp/frida-server&quot;</span><br><span class="line">adb shell &quot;/data/local/tmp/frida-server &amp;&quot; # 启动server，此命令窗口不能关闭</span><br></pre></td></tr></table></figure></li>
-<li>Frida-Tools安装，使用pip命令，需先安装Python;  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="comment">#pip install frida-dexdump 使用下面执令</span></span></span><br><span class="line">pip install frida-tools</span><br></pre></td></tr></table></figure>
-  Frida额外配置，用于各命令行快捷操作<a target="_blank" rel="noopener" href="https://github.com/frida/frida">参考说明</a></li>
-<li>检查Frida配置服务器及客户端是否成功，需要单开一个命令窗口：  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">frida-ps -U ## 显示app名称</span><br><span class="line">frida-ps -U -a   # 查看包名</span><br></pre></td></tr></table></figure></li>
-<li>脱壳<a target="_blank" rel="noopener" href="https://github.com/hluwa/frida-dexdump">操作指令</a>  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">frida-dexdump -U -f 包名      </span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="comment"># 或者打开app后，用下面的命令</span></span></span><br><span class="line">frida-dexdump -FU -d -o .</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="comment"># 出现All Done后 表示操作成功</span></span></span><br></pre></td></tr></table></figure></li>
-<li>Dex文件，请查看命令行提示，在执行命令的当前电脑上面，对应APP的包名。</li>
-</ol>
-<h2 id="第三种方案（BlackDex）（失败。推荐第一或第二方案）"><a href="#第三种方案（BlackDex）（失败。推荐第一或第二方案）" class="headerlink" title="第三种方案（BlackDex）（失败。推荐第一或第二方案）"></a>第三种方案（BlackDex）（失败。推荐第一或第二方案）</h2><h3 id="操作步骤"><a href="#操作步骤" class="headerlink" title="操作步骤"></a>操作步骤</h3><ol>
-<li>下载源码；</li>
-<li>编译项目源码（会下载NDK）；</li>
-<li>运行项目，打开APP;</li>
-<li>选择目标APP进行脱壳。</li>
-</ol>
-<h3 id="Dex合并-合并有问题-，可以批量d2j-dex2jar-bat-dex"><a href="#Dex合并-合并有问题-，可以批量d2j-dex2jar-bat-dex" class="headerlink" title="Dex合并 合并有问题!!!，可以批量d2j-dex2jar.bat *.dex"></a>Dex合并 合并有问题!!!，可以批量d2j-dex2jar.bat *.dex</h3><p>   导出的Dex很多，需要进行合并，方便观看。</p>
-<ol>
-<li>需要准备Android SDK，配置环境变量至 build-tools文件夹；</li>
-<li>执行dx 合并dex命令<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dx --dex --output=merged.dex classes.dex classes02.dex classes03.dex classes04.dex classes05.dex classes06.dex classes07.dex classes08.dex classes09.dex classes10.dex classes11.dex classes12.dex classes13.dex classes14.dex classes15.dex classes16.dex classes17.dex classes18.dex classes19.dex</span><br></pre></td></tr></table></figure></li>
-<li>使用d2j-dex2jar.bat命令进行dex解析，jd-gui查看dex包。</li>
-</ol>
-<h3 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h3><ol>
-<li>普通手机Android 9安装 Xposed 0.22版本 打开失败。</li>
-<li>夜神模拟器Android 7 安装Xposed0.22版本 不兼容。</li>
-<li>夜神模拟器应用商店自带Xposed多开鸭版本，可以使用（<em>推荐</em>）。</li>
-<li>VirtualXposed 32位版本的APP 使用 v0.18.2</li>
-<li>夜神模拟器adb连接： nox_adb.exe connect 127.0.0.1:62001 或者 adb connect 127.0.0.1:62001（关于手机打开开发者模式）</li>
-<li>Frida使用注意事项<a target="_blank" rel="noopener" href="https://github.com/frida/frida/issues/1269">&#x2F;system&#x2F;bin&#x2F;sh: &#x2F;data&#x2F;local&#x2F;tmp&#x2F;frida-server: can’t execute: Is a directory</a></li>
-</ol>
-<h3 id="参考学习"><a href="#参考学习" class="headerlink" title="参考学习"></a>参考学习</h3><ul>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_44032232/article/details/109556934">Android加固原理</a></li>
-<li><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1778822">加固脱壳</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/jjz/blog/blob/master/android/Apk%E5%8C%85%E7%9A%84%E7%A0%B4%E8%A7%A3%E4%B8%8E%E5%8F%8D%E7%BC%96%E8%AF%91.md">Android反编译</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_42603784/article/details/88265030">Android 模拟器脱壳</a></li>
-<li><a target="_blank" rel="noopener" href="https://docs.python.org/3/">Python下载</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/hluwa/FRIDA-DEXDump">Frida-Dump</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/hluwa/FRIDA-DEXDump">Frida-Server</a></li>
-<li><a target="_blank" rel="noopener" href="https://wiki.hluwa.cn/s/01f7fac2-81e4-4468-85d8-f710e17da12d/doc/frida-dexdump-OAEWYNIRPm">FridaDump 矛与盾</a></li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://zhaosunny1.github.io/2023/11/21/flutter/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Sunny Zhao">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Sunny Zhao's Blog">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Sunny Zhao's Blog">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2023/11/21/flutter/" class="post-title-link" itemprop="url">Flutter 基本学习路线图</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2023-11-21 10:51:11" itemprop="dateCreated datePublished" datetime="2023-11-21T10:51:11+08:00">2023-11-21</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2024-01-31 10:52:26" itemprop="dateModified" datetime="2024-01-31T10:52:26+08:00">2024-01-31</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Flutter/" itemprop="url" rel="index"><span itemprop="name">Flutter</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>Flutter是一个跨平台的UI开发框架，独特的渲染引擎,使用Dart开发语言，响应式开发，支持Android,iOS，Windows,Linux和MacOS。</p>
-<p>一切皆是组件。</p>
-<p>参考学习地址：</p>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://flutter.cn/docs">Flutter学习地址</a></li>
-<li><a target="_blank" rel="noopener" href="https://dart.cn/">Dart学习地址</a></li>
-</ul>
-<h2 id="Dart语言学习（3-x）"><a href="#Dart语言学习（3-x）" class="headerlink" title="Dart语言学习（3.x）"></a>Dart语言学习（3.x）</h2><p>根据官方文档教程进行学习及实践</p>
-<h2 id="Flutter学习-3-x版本-："><a href="#Flutter学习-3-x版本-：" class="headerlink" title="Flutter学习(3.x版本)："></a>Flutter学习(3.x版本)：</h2><p>根据官方文档教程进行学习及实践</p>
-<ul>
-<li><h3 id="用户界面"><a href="#用户界面" class="headerlink" title="用户界面"></a>用户界面</h3><ul>
-<li><input checked="" disabled="" type="checkbox"> 介绍</li>
-<li><input disabled="" type="checkbox"> Widget目录(<code>https://juejin.cn/post/6919361756041052167#heading-5</code>)<ol>
-<li><code>Image Widget</code>:  A Widget that displays the image.<ul>
-<li>Image.new, for obtaining an image from an ImageProvider.</li>
-<li>Image.asset, for obtaining an image from an AssetBundle using a key.</li>
-<li>Image.network, for obtaining an image from a URL.</li>
-<li>Image.file, for obtaining an image from a File.</li>
-<li>Image.memory, for obtaining an image from a Uint8List.</li>
-</ul>
-</li>
-</ol>
-</li>
-<li><input checked="" disabled="" type="checkbox"> 布局构建<ul>
-<li><input checked="" disabled="" type="checkbox"> 列表 &amp; 网格<ul>
-<li>构建与使用列表</li>
-<li>构建一个横向列表</li>
-<li>构建一个网络视图</li>
-<li>构建包含不同类型元素的列表</li>
-<li>构建元素之间包含间隔的列表</li>
-<li>处理长列表</li>
-</ul>
-</li>
-<li><input disabled="" type="checkbox"> 滚动<ul>
-<li>使用Slivers实现各种滚动需求</li>
-<li>在列表开头添加一个浮动的顶栏</li>
-<li>构建一个平行氏位滚动的交果</li>
-</ul>
-</li>
-<li><input disabled="" type="checkbox"> 响应式设计<ul>
-<li>创建响应式和自适应的应用</li>
-<li>构建自适应应用</li>
-<li>根据旋转角度更新应用的界面元素</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><input disabled="" type="checkbox"> 设计&amp;主题 </li>
-<li><input disabled="" type="checkbox"> 交互</li>
-<li><input checked="" disabled="" type="checkbox"> 资源&amp;媒体<ul>
-<li><input checked="" disabled="" type="checkbox"> 添加资源和图片<blockquote>
-<p>配置assets；AssetBundle加载；Image.asset支持分辨率加载；与Android iOS互加载资源；支持多种资源文件。</p>
-</blockquote>
-</li>
-<li><input checked="" disabled="" type="checkbox"> 加载网络图片<blockquote>
-<p>Image.network(‘<a target="_blank" rel="noopener" href="https://picsum.photos/250?image=9">https://picsum.photos/250?image=9</a>‘);<br>Image.network(‘<a target="_blank" rel="noopener" href="https://docs.flutter.dev/assets/images/dash/dash-fainting.gif');%E6%94%AF%E6%8C%81%E5%8A%A8%E7%94%BB%E3%80%82">https://docs.flutter.dev/assets/images/dash/dash-fainting.gif&#39;);支持动画。</a></p>
-</blockquote>
-</li>
-<li><input checked="" disabled="" type="checkbox"> 从占位图过渡到图片<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">FadeInImage.memoryNetwork(</span><br><span class="line">  placeholder: kTransparentImage,</span><br><span class="line">  image: <span class="string">&#x27;https://picsum.photos/250?image=9&#x27;</span>,</span><br><span class="line">)<span class="comment">//内存占位符</span></span><br><span class="line">FadeInImage.assetNetwork(</span><br><span class="line">   placeholder: <span class="string">&#x27;assets/loading.gif&#x27;</span>,</span><br><span class="line">   image: <span class="string">&#x27;https://picsum.photos/250?image=9&#x27;</span>,</span><br><span class="line">)<span class="comment">//本地资源占位符</span></span><br></pre></td></tr></table></figure>
-<blockquote>
-</blockquote>
-</li>
-<li><input checked="" disabled="" type="checkbox"> 播放及暂停视频<blockquote>
-<p> VideoPlayer插件；在 iOS 上，video_player 使用 AVPlayer 进行播放控制。在 Android上，使用的是 ExoPlayer。</p>
-</blockquote>
-</li>
-</ul>
-</li>
-<li><input disabled="" type="checkbox"> 导航&amp;路由</li>
-<li><input disabled="" type="checkbox"> 动画&amp;过渡</li>
-<li><input disabled="" type="checkbox"> 无障碍&amp;国际化<ul>
-<li><input disabled="" type="checkbox"> 无障碍</li>
-<li><input checked="" disabled="" type="checkbox"> 国际化<blockquote>
-<p>Flutter Intl 插件实现。</p>
-</blockquote>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><h3 id="界面以外的开发"><a href="#界面以外的开发" class="headerlink" title="界面以外的开发"></a>界面以外的开发</h3></li>
-<li><h3 id="工具-amp-代码编辑器"><a href="#工具-amp-代码编辑器" class="headerlink" title="工具&amp;代码编辑器"></a>工具&amp;代码编辑器</h3></li>
-<li><h3 id="Flutter相关概念"><a href="#Flutter相关概念" class="headerlink" title="Flutter相关概念"></a>Flutter相关概念</h3></li>
-<li><h3 id=""><a href="#" class="headerlink" title=""></a></h3></li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://zhaosunny1.github.io/2023/06/09/as-postlibrary/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Sunny Zhao">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Sunny Zhao's Blog">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Sunny Zhao's Blog">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2023/06/09/as-postlibrary/" class="post-title-link" itemprop="url">Android Studio 制作aar包发布到私服</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-      
-
-      <time title="Created: 2023-06-09 10:15:36 / Modified: 14:29:16" itemprop="dateCreated datePublished" datetime="2023-06-09T10:15:36+08:00">2023-06-09</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>以前是将aar包托管到jcenter、jitpack.io等网站。使用不方便。现在Android Studio本身插件已支持。如果公司中已经部署Nexus私服，则使用此操作，将aar包发布公司私服，使用方便。</p>
-<h2 id="快速开始"><a href="#快速开始" class="headerlink" title="快速开始"></a>快速开始</h2><h3 id="1-library中的build-gradle配置"><a href="#1-library中的build-gradle配置" class="headerlink" title="1.library中的build.gradle配置"></a>1.library中的build.gradle配置</h3><p>打开项目的库模块中的build.gradle,填写以下配置。配置Nexus Maven仓库中的地址以及登录账号密码，设置相应的library的组id和产品id和填写版本号。</p>
-<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">plugins &#123;</span><br><span class="line">    id <span class="string">&#x27;com.android.library&#x27;</span></span><br><span class="line">    id <span class="string">&#x27;kotlin-android&#x27;</span></span><br><span class="line">    id <span class="string">&#x27;kotlin-kapt&#x27;</span></span><br><span class="line">    id <span class="string">&#x27;maven-publish&#x27;</span></span><br><span class="line">&#125;</span><br><span class="line">afterEvaluate &#123;</span><br><span class="line">    publishing &#123;</span><br><span class="line">        publications &#123;</span><br><span class="line">            release(MavenPublication) &#123;</span><br><span class="line">                groupId = <span class="string">&#x27;GROUP ID&#x27;</span> <span class="comment">//publish</span></span><br><span class="line">                artifactId = <span class="string">&#x27;产口ID&#x27;</span></span><br><span class="line">                version = <span class="string">&#x27;1.0.3&#x27;</span></span><br><span class="line">                from components.release</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        repositories &#123;</span><br><span class="line">            maven &#123;</span><br><span class="line">                url = <span class="string">&quot;MAVEN 仓库地址&quot;</span></span><br><span class="line">                allowInsecureProtocol(<span class="literal">true</span>)</span><br><span class="line">                credentials &#123;</span><br><span class="line">                    username = <span class="string">&#x27;账号名&#x27;</span></span><br><span class="line">                    password = <span class="string">&#x27;密码&#x27;</span></span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="2-打包aar上传到Nexus私服"><a href="#2-打包aar上传到Nexus私服" class="headerlink" title="2.打包aar上传到Nexus私服"></a>2.打包aar上传到Nexus私服</h3><p>打开Android Studio,找到gradle运行窗口，操作路径：(1)在Android Studio的最右侧，从上到下可找到gradle;(2)通过顶部菜单栏：View&gt; Tools Window &gt; Gradle。 打开Gradle窗口后，可找到一个大象的图标，点击输入有下命令并按下enter按键，等待命令执行完成。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gradle publish</span><br></pre></td></tr></table></figure>
-
-<h3 id="3-在项目中使用引用"><a href="#3-在项目中使用引用" class="headerlink" title="3.在项目中使用引用"></a>3.在项目中使用引用</h3><p>上传完成后，可在Nexus私服中看到相应的aar包。在项目中使用时，需要进行一些配置。首先是Android Studio项目配置私服地址，在根路径下面的build.gradle中进行配置</p>
-<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">allprojects &#123;</span><br><span class="line">    repositories &#123;</span><br><span class="line">        maven &#123; url <span class="string">&#x27;https://maven.aliyun.com/repository/public&#x27;</span> &#125; </span><br><span class="line">        maven &#123; url <span class="string">&#x27;http://配置的仓库ip地址:port/xxx/maven-android/&#x27;</span> &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>在需要引用此aar的module下面的build.gradle进行配置：</p>
-<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">api <span class="string">&quot;androidx.core:core-ktx:1.6.0&quot;</span>  </span><br><span class="line">api <span class="string">&quot;GroupdId: 产品ID：版本号&quot;</span>  <span class="comment">//可以nexus私服查到对应的aar包所在文件夹，找到groovy的引用地址</span></span><br></pre></td></tr></table></figure>
-<p>点击gradle sync、运行项目即可使用。</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://zhaosunny1.github.io/2023/06/08/hello-world/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Sunny Zhao">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Sunny Zhao's Blog">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Sunny Zhao's Blog">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2023/06/08/hello-world/" class="post-title-link" itemprop="url">Hello World</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2023-06-08 17:17:47" itemprop="dateCreated datePublished" datetime="2023-06-08T17:17:47+08:00">2023-06-08</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2024-01-31 10:53:18" itemprop="dateModified" datetime="2024-01-31T10:53:18+08:00">2024-01-31</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
 
 
 
